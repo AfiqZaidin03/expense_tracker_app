@@ -30,7 +30,7 @@ class _MyChartState extends State<MyChart> {
           ],
           transform: const GradientRotation(pi / 40),
         ),
-        width: 10,
+        width: 20,
         backDrawRodData: BackgroundBarChartRodData(
           show: true,
           toY: 5,
