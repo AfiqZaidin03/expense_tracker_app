@@ -227,7 +227,82 @@ class MainScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            ListView()
+            Expanded(
+              child: ListView.builder(
+                itemCount: 6,
+                itemBuilder: (context, int i) {
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: Colors.yellow[700],
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.local_pizza,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
+                              const SizedBox(width: 12),
+                              Text(
+                                'Food',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                '- RM 45.00',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Text(
+                                'Today',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Theme.of(context).colorScheme.outline,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
