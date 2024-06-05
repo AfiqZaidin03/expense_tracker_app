@@ -13,6 +13,7 @@ class _AddExpenseState extends State<AddExpense> {
   TextEditingController expenseController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
   TextEditingController dateController = TextEditingController();
+  DateTime selectDate = DateTime.now();
 
   @override
   void initState() {
@@ -47,12 +48,15 @@ class _AddExpenseState extends State<AddExpense> {
                   controller: expenseController,
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      FontAwesomeIcons.moneyBill,
-                      size: 24,
-                      color: Colors.grey,
+                    prefixIcon: const Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Icon(
+                        FontAwesomeIcons.moneyBill,
+                        size: 24,
+                        color: Colors.grey,
+                      ),
                     ),
-                    hintText: 'RM 0.00',
+                    hintText: ' RM 0.00',
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -66,11 +70,75 @@ class _AddExpenseState extends State<AddExpense> {
               TextFormField(
                 controller: categoryController,
                 textAlignVertical: TextAlignVertical.center,
+                readOnly: true,
+                onTap: () {},
                 decoration: InputDecoration(
                   prefixIcon: const Icon(
                     FontAwesomeIcons.list,
                     size: 24,
                     color: Colors.grey,
+                  ),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              'Create a category',
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextFormField(
+                                  textAlignVertical: TextAlignVertical.center,
+                                  decoration: InputDecoration(
+                                    hintText: 'Name',
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                TextFormField(
+                                  textAlignVertical: TextAlignVertical.center,
+                                  decoration: InputDecoration(
+                                    hintText: 'Icon',
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                TextFormField(
+                                  textAlignVertical: TextAlignVertical.center,
+                                  decoration: InputDecoration(
+                                    hintText: 'Color',
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(
+                      FontAwesomeIcons.plus,
+                      size: 16,
+                      color: Colors.grey,
+                    ),
                   ),
                   hintText: 'Category',
                   filled: true,
@@ -86,15 +154,23 @@ class _AddExpenseState extends State<AddExpense> {
                 controller: dateController,
                 textAlignVertical: TextAlignVertical.center,
                 readOnly: true,
-                onTap: () {
-                  showDatePicker(
+                onTap: () async {
+                  DateTime? newDate = await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now(),
+                    initialDate: selectDate,
                     firstDate: DateTime.now(),
                     lastDate: DateTime.now().add(
                       const Duration(days: 365),
                     ),
                   );
+
+                  if (newDate != null) {
+                    setState(() {
+                      dateController.text =
+                          DateFormat('dd/MM/yyyy').format(newDate);
+                      selectDate = newDate;
+                    });
+                  }
                 },
                 decoration: InputDecoration(
                   prefixIcon: const Icon(
