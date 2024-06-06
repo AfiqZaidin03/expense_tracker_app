@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +15,18 @@ class _AddExpenseState extends State<AddExpense> {
   TextEditingController categoryController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   DateTime selectDate = DateTime.now();
+
+  List<String> myCategoryIcons = [
+    'entertainment',
+    'food',
+    'home',
+    'pet',
+    'shopping',
+    'tech',
+    'travel'
+  ];
+
+  String iconSelected = '';
 
   @override
   void initState() {
@@ -83,53 +96,149 @@ class _AddExpenseState extends State<AddExpense> {
                       showDialog(
                         context: context,
                         builder: (context) {
-                          return AlertDialog(
-                            title: const Text(
-                              'Create a category',
-                            ),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                TextFormField(
-                                  textAlignVertical: TextAlignVertical.center,
-                                  decoration: InputDecoration(
-                                    hintText: 'Name',
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide.none,
-                                    ),
+                          bool isExpended = false;
+                          return StatefulBuilder(
+                            builder: (BuildContext context, setState) {
+                              return AlertDialog(
+                                title: const Text(
+                                  'Create a category',
+                                ),
+                                content: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      TextFormField(
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          hintText: 'Name',
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      TextFormField(
+                                        onTap: () {
+                                          setState(() {
+                                            isExpended = !isExpended;
+                                          });
+                                        },
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
+                                        readOnly: true,
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          hintText: 'Icon',
+                                          filled: true,
+                                          suffixIcon: const Icon(
+                                            CupertinoIcons.chevron_down,
+                                            size: 12,
+                                          ),
+                                          fillColor: Colors.white,
+                                          border: OutlineInputBorder(
+                                            borderRadius: isExpended
+                                                ? const BorderRadius.vertical(
+                                                    top: Radius.circular(12),
+                                                  )
+                                                : BorderRadius.circular(12),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                        ),
+                                      ),
+                                      isExpended
+                                          ? Container(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: 200,
+                                              decoration: const BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.vertical(
+                                                  bottom: Radius.circular(12),
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: GridView.builder(
+                                                  gridDelegate:
+                                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisCount: 3,
+                                                    mainAxisSpacing: 5,
+                                                    crossAxisSpacing: 5,
+                                                  ),
+                                                  itemCount:
+                                                      myCategoryIcons.length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int i) {
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          iconSelected =
+                                                              myCategoryIcons[
+                                                                  i];
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                        width: 50,
+                                                        height: 50,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                            width: 4,
+                                                            color: iconSelected ==
+                                                                    myCategoryIcons[
+                                                                        i]
+                                                                ? Colors.green
+                                                                : Colors.grey,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(12),
+                                                          image:
+                                                              DecorationImage(
+                                                            image: AssetImage(
+                                                              'assets/${myCategoryIcons[i]}.png',
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            )
+                                          : Container(),
+                                      const SizedBox(height: 16),
+                                      TextFormField(
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          hintText: 'Color',
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(height: 16),
-                                TextFormField(
-                                  textAlignVertical: TextAlignVertical.center,
-                                  decoration: InputDecoration(
-                                    hintText: 'Icon',
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                TextFormField(
-                                  textAlignVertical: TextAlignVertical.center,
-                                  decoration: InputDecoration(
-                                    hintText: 'Color',
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                              );
+                            },
                           );
                         },
                       );
