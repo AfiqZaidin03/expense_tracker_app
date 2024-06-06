@@ -1,3 +1,5 @@
+import 'package:expense_repository/src/entities/entities.dart';
+
 class Category {
   String categoryId;
   String name;
@@ -12,6 +14,14 @@ class Category {
     required this.icon,
     required this.color,
   });
+
+  static final empty = Category(
+    categoryId: '',
+    name: '',
+    totalExpenses: 0,
+    icon: '',
+    color: '',
+  );
 
   CategoryEntity toEntity() {
     return CategoryEntity(
