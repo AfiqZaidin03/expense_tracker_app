@@ -1,8 +1,12 @@
+import 'package:expense_repository/expense_repository.dart';
+import 'package:expense_tracker_app/screens/expense/blocs/create_category_bloc/create_category_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 class AddExpense extends StatefulWidget {
   const AddExpense({super.key});
@@ -98,6 +102,12 @@ class _AddExpenseState extends State<AddExpense> {
                           bool isExpended = false;
                           String iconSelected = '';
                           Color categoryColor = Colors.white;
+                          TextEditingController categoryNameController =
+                              TextEditingController();
+                          TextEditingController categoryIconController =
+                              TextEditingController();
+                          TextEditingController categoryColorController =
+                              TextEditingController();
 
                           return StatefulBuilder(
                             builder: (BuildContext context, setState) {
@@ -111,6 +121,7 @@ class _AddExpenseState extends State<AddExpense> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       TextFormField(
+                                        controller: categoryNameController,
                                         textAlignVertical:
                                             TextAlignVertical.center,
                                         decoration: InputDecoration(
@@ -127,6 +138,7 @@ class _AddExpenseState extends State<AddExpense> {
                                       ),
                                       const SizedBox(height: 16),
                                       TextFormField(
+                                        controller: categoryIconController,
                                         onTap: () {
                                           setState(() {
                                             isExpended = !isExpended;
@@ -222,6 +234,7 @@ class _AddExpenseState extends State<AddExpense> {
                                           : Container(),
                                       const SizedBox(height: 16),
                                       TextFormField(
+                                        controller: categoryColorController,
                                         onTap: () {
                                           showDialog(
                                             context: context,
@@ -296,7 +309,17 @@ class _AddExpenseState extends State<AddExpense> {
                                         child: TextButton(
                                           onPressed: () {
                                             // Create Category Object and pop
-                                            Navigator.pop(context);
+                                            Category category = Category.empty;
+                                            category.categoryId = Uuid().v1();
+                                            category.name =
+                                                categoryNameController.text;
+                                            category.icon == iconSelected;
+                                            category.color =
+                                                categoryColor.toString();
+                                            context
+                                                .read<CreateCategoryBloc>()
+                                                .add(CreateCategory(category));
+                                            // Navigator.pop(context);
                                           },
                                           style: TextButton.styleFrom(
                                             backgroundColor: Colors.black,
