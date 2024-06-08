@@ -102,9 +102,42 @@ class _AddExpenseState extends State<AddExpense> {
                   hintText: 'Category',
                   filled: true,
                   fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(12),
+                    ),
+                    //  BorderRadius.circular(12),
                     borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 200,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(12),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.builder(
+                    itemCount: 3,
+                    itemBuilder: (BuildContext context, int i) {
+                      return Card(
+                          child: ListTile(
+                        leading: Image.asset(
+                          'assets/food.png',
+                          scale: 1.5,
+                        ),
+                        title: const Text('Food'),
+                        tileColor: Colors.blueGrey,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ));
+                    },
                   ),
                 ),
               ),
