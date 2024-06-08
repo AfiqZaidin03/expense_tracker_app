@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_repository/expense_repository.dart';
@@ -15,11 +15,12 @@ class FirebaseExpenseRepo implements ExpenseRepository {
           .doc(category.categoryId)
           .set(category.toEntity().toDocument());
     } catch (e) {
-      log(e.toString() as num);
+      log(e.toString());
       rethrow;
     }
   }
 
+  @override
   Future<List<Category>> getCategory() async {
     try {
       return await categoryCollection.get().then((value) => value.docs
@@ -28,7 +29,19 @@ class FirebaseExpenseRepo implements ExpenseRepository {
               ))
           .toList());
     } catch (e) {
-      log(e.toString() as num);
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> createExpense(Expense expense) async {
+    try {
+      await expenseCollection
+          .doc(expense.expenseId)
+          .set(expense.toEntity().toDocument());
+    } catch (e) {
+      log(e.toString());
       rethrow;
     }
   }
