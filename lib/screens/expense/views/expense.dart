@@ -1,3 +1,4 @@
+import 'package:expense_repository/expense_repository.dart';
 import 'package:expense_tracker_app/screens/expense/blocs/get_categories_bloc/get_categories_bloc.dart';
 import 'package:expense_tracker_app/screens/expense/views/category.dart';
 import 'package:flutter/material.dart';
@@ -16,21 +17,13 @@ class _AddExpenseState extends State<AddExpense> {
   TextEditingController expenseController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
   TextEditingController dateController = TextEditingController();
-  DateTime selectDate = DateTime.now();
-
-  List<String> myCategoryIcons = [
-    'entertainment',
-    'food',
-    'home',
-    'pet',
-    'shopping',
-    'tech',
-    'travel'
-  ];
+  // DateTime selectDate = DateTime.now();
+  late Expense expense;
 
   @override
   void initState() {
     dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+    expense = Expense.empty;
     super.initState();
   }
 
@@ -89,16 +82,24 @@ class _AddExpenseState extends State<AddExpense> {
                       readOnly: true,
                       onTap: () {},
                       decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          FontAwesomeIcons.list,
-                          size: 24,
-                          color: Colors.grey,
-                        ),
+                        filled: true,
+                        fillColor: expense.category == Category.empty
+                            ? Colors.white
+                            : Color(expense.category.color),
+                        prefixIcon: expense.category == Category.empty
+                            ? const Icon(
+                                FontAwesomeIcons.list,
+                                size: 24,
+                                color: Colors.grey,
+                              )
+                            : Image.asset(
+                                'assets/${expense.category.icon}.png',
+                                scale: 1.5,
+                              ),
                         suffixIcon: IconButton(
                           onPressed: () async {
                             var newCategory =
                                 await getCategoryCreation(context);
-                            print(newCategory);
                             setState(() {
                               state.categories.insert(0, newCategory);
                             });
@@ -110,8 +111,6 @@ class _AddExpenseState extends State<AddExpense> {
                           ),
                         ),
                         hintText: 'Category',
-                        filled: true,
-                        fillColor: Colors.white,
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.vertical(
                             top: Radius.circular(12),
@@ -136,19 +135,27 @@ class _AddExpenseState extends State<AddExpense> {
                           itemCount: state.categories.length,
                           itemBuilder: (BuildContext context, int i) {
                             return Card(
-                                child: ListTile(
-                              leading: Image.asset(
-                                'assets/${state.categories[i].icon}.png',
-                                scale: 1.5,
+                              child: ListTile(
+                                onTap: () {
+                                  setState(() {
+                                    expense.category = state.categories[i];
+                                    categoryController.text =
+                                        expense.category.name;
+                                  });
+                                },
+                                leading: Image.asset(
+                                  'assets/${state.categories[i].icon}.png',
+                                  scale: 1.5,
+                                ),
+                                title: Text(
+                                  state.categories[i].name,
+                                ),
+                                tileColor: Color(state.categories[i].color),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
-                              title: Text(
-                                state.categories[i].name,
-                              ),
-                              tileColor: Color(state.categories[i].color),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ));
+                            );
                           },
                         ),
                       ),
@@ -161,7 +168,7 @@ class _AddExpenseState extends State<AddExpense> {
                       onTap: () async {
                         DateTime? newDate = await showDatePicker(
                           context: context,
-                          initialDate: selectDate,
+                          initialDate: expense.date,
                           firstDate: DateTime.now(),
                           lastDate: DateTime.now().add(
                             const Duration(days: 365),
@@ -172,7 +179,7 @@ class _AddExpenseState extends State<AddExpense> {
                           setState(() {
                             dateController.text =
                                 DateFormat('dd/MM/yyyy').format(newDate);
-                            selectDate = newDate;
+                            expense.date = newDate;
                           });
                         }
                       },
@@ -196,7 +203,11 @@ class _AddExpenseState extends State<AddExpense> {
                       width: double.infinity,
                       height: kToolbarHeight,
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            expense.amount = int.parse(expenseController.text);
+                          });
+                        },
                         style: TextButton.styleFrom(
                           backgroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
